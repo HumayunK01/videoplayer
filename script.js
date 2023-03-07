@@ -51,7 +51,6 @@ $(document).ready(function () {
       thumbnail: "https://i.vimeocdn.com/video/600328152_590x332.jpg",
     },
   ];
-
   var videoPlaySectionData = [
     {
       id: "1",
@@ -151,7 +150,6 @@ $(document).ready(function () {
       isSaved: true,
     },
   ];
-
   // Variable
   var platlistWrapper = document.getElementById("playlist-wrapper");
   var videoplayer = document.getElementById("video-player");
