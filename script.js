@@ -152,17 +152,49 @@ $(document).ready(function () {
     },
   ];
 
+  // Variable
   var platlistWrapper = document.getElementById("playlist-wrapper");
+  var videoplayer = document.getElementById("video-player");
+  var videotitle = document.getElementById("video-title");
+  var viewscount = document.getElementById("views-count");
+  var videodescription = document.getElementById("video-description");
+  var heart = document.getElementById("heart");
+  var bookmark = document.getElementById("bookmark");
 
+  //   Update right side player data on page load and on click of playlist
+  function updateVideoPlayer(data) {
+    videoplayer.src = "https://player.vimeo.com/video/" + data.vimeoId;
+    videotitle.innerText = data.title;
+    videodescription.innerText = data.description;
+    viewscount.innerText = data.views / 1000 + "k";
+
+    if (data.isLiked == "true") {
+      heart.classList.remove("far");
+      heart.classList.add("fa-solid");
+    } else {
+      heart.classList.add("far");
+      heart.classList.remove("fa-solid");
+    }
+    if (data.isSaved == "true") {
+      bookmark.classList.remove("far");
+      bookmark.classList.add("fa-solid");
+    } else {
+      bookmark.classList.add("far");
+      bookmark.classList.remove("fa-solid");
+    }
+  }
+  updateVideoPlayer(videoPlaySectionData[0]);
+
+  //   Create each playlist card using js
   function createPlaylistCard(obj, pos) {
-    // <div id="card3" class="playlist-card">
-    //     <img class="thumbnail" src="https://i.vimeocdn.com/video/726986673_390x220.webp" />
-    //     <h3 class="video-card-title">The Heart of Soba</h3>
-    // </div>
-
     var mainDiv = document.createElement("div");
     mainDiv.id = "card" + obj.id;
     mainDiv.className = "playlist-card";
+    if (pos == 1) {
+      mainDiv.className = "playlist-card active-card";
+    } else {
+      mainDiv.className = "playlist-card";
+    }
 
     var thumbnail = document.createElement("img");
     thumbnail.src = obj.thumbnail;
@@ -170,17 +202,25 @@ $(document).ready(function () {
 
     var title = document.createElement("h3");
     title.className = "video-card-title";
-    title.innerHTML = pos + 1 + ". " + obj.title;
+    title.innerHTML = pos + ". " + obj.title;
 
     mainDiv.appendChild(thumbnail);
     mainDiv.appendChild(title);
 
+    mainDiv.addEventListener("click", (e) => {
+      let activeCard = document.querySelector(".active-card");
+      activeCard.classList.remove("active-card");
+      e.target.classList.add("active-card");
+      let i = e.target.id.replace("card", "") - 1;
+      updateVideoPlayer(videoPlaySectionData[i]);
+    });
     return mainDiv;
   }
 
+  //   To render the playlist cards on the right side
   for (let i = 0; i < playlistData.length; i++) {
     const playlist = playlistData[i];
-    platlistWrapper.appendChild(createPlaylistCard(playlist, i));
+    platlistWrapper.appendChild(createPlaylistCard(playlist, i + 1));
     createPlaylistCard(playlist);
   }
 });
